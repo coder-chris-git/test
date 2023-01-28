@@ -1,11 +1,4 @@
 ---
-- name: check git version
-  shell: git --version
-  ignore_errors: true
-
-  register: pre_git_version
-- debug: var=pre_git_version
-
 
 - name: install git
   yum:
