@@ -14,9 +14,3 @@
 
 - debug: var=git
 
-- name: post check git version
-  shell: git --version
-  register: git_version
-
-- name: print git version
-  debug: var=git_version.stdout
