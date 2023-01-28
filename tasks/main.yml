@@ -3,8 +3,8 @@
   shell: git --version
   ignore_errors: true
 
-  register: git_version
-- debug: var=git_version
+  register: pre_git_version
+- debug: var=pre_git_version
 
 
 - name: install git
