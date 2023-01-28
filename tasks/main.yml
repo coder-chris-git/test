@@ -1,0 +1,22 @@
+---
+- name: check git version
+  shell: git --version
+  ignore_errors: true
+
+  register: git_version
+- debug: var=git_version
+
+
+- name: install git
+  yum:
+    name: git
+  register: git
+
+- debug: var=git
+
+- name: check git version
+  shell: git --version
+  register: git_version
+
+- name: print git version
+  debug: var=git_version.stdout
