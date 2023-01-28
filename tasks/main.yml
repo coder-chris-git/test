@@ -14,7 +14,7 @@
 
 - debug: var=git
 
-- name: check git version
+- name: post check git version
   shell: git --version
   register: git_version
 
