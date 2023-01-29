@@ -1,9 +1,4 @@
 ---
-
-
-
-
-
 - name: Create a Tomcat User
   user:
     name: tomcat
@@ -12,8 +7,8 @@
   group:
     name: tomcat
 
-- name: Install JAVA
-  yum:
+- name: Install JAVA SDK and PolicyKit
+  package:
     name: "{{ item }}"
     state: present
   with_items: 
@@ -28,7 +23,7 @@
     mode: 755
     recurse: yes
 
-- name: download & unarchive tomcat10 
+- name: Download & unarchive Tomcat
   unarchive:
     src: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.64/bin/apache-tomcat-9.0.64.tar.gz
     dest: /opt/tomcat9
@@ -46,19 +41,21 @@
 
 - name: Copy Tomcat service from local to remote
   copy:
-    src: "{{ role_path }}/files/tomcat.service"
+    src: "files/tomcat.service"
     dest: /etc/systemd/system/
     mode: 0755
-
-
-
-- name: Run a command as nobody
-  # become: true
-  # become_method: su
-  # become_user: root
-  # become_flags: '-s /bin/sh'
+ 
+- name: Enable Tomcat
   service:
     daemon_reload: yes
     name: tomcat
     state: restarted
     enabled: yes
+
+- name: collect facts about system services
+  service_facts:
+  
+- name: Print tomcat service facts 
+  ansible.builtin.debug:
+    var: ansible_facts.services['tomcat.service']
+  failed_when: ansible_facts.services['tomcat.service'].state != "running"
