@@ -1,9 +1,64 @@
 ---
 
-- name: install git
+
+
+
+
+- name: Create a Tomcat User
+  user:
+    name: tomcat
+
+- name: Create a Tomcat Group
+  group:
+    name: tomcat
+
+- name: Install JAVA
   yum:
-    name: git
-  register: git
+    name: "{{ item }}"
+    state: present
+  with_items: 
+    - polkit
+    - java-17-openjdk
 
-- debug: var=git
+- name: Create a Tomcat Directory
+  file:
+    path: /opt/tomcat9
+    owner: tomcat
+    group: tomcat
+    mode: 755
+    recurse: yes
 
+- name: download & unarchive tomcat10 
+  unarchive:
+    src: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.64/bin/apache-tomcat-9.0.64.tar.gz
+    dest: /opt/tomcat9
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Change ownership of tomcat directory
+  file:
+    path: /opt/tomcat9
+    owner: tomcat
+    group: tomcat
+    mode: "u+rwx,g+rx,o=rx"
+    recurse: yes
+    state: directory
+
+- name: Copy Tomcat service from local to remote
+  copy:
+    src: "{{ role_path }}/files/tomcat.service"
+    dest: /etc/systemd/system/
+    mode: 0755
+
+
+
+- name: Run a command as nobody
+  # become: true
+  # become_method: su
+  # become_user: root
+  # become_flags: '-s /bin/sh'
+  service:
+    daemon_reload: yes
+    name: tomcat
+    state: restarted
+    enabled: yes
