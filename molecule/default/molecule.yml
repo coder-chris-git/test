@@ -23,6 +23,18 @@ platforms:
     # to rebuild it, just to detect a possible regression on that area
     # the pre_build=true case is already covered by the dynamic test
     pre_build_image: false
+
+  - name: foo
+    image: registry.access.redhat.com/ubi7/ubi-init:latest
+    privileged: True
+    volume_mounts:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    command: "/usr/sbin/init"
+    # keep this here to avoid regressions with molecule substitutions
+    # while above image is already pre-build we want to force molecule
+    # to rebuild it, just to detect a possible regression on that area
+    # the pre_build=true case is already covered by the dynamic test
+    pre_build_image: false
 provisioner:
   name: ansible
 verifier:
