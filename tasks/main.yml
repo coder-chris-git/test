@@ -13,7 +13,7 @@
     state: present
   with_items: 
     - polkit
-    - java-17-openjdk
+    - java-17-openjdk-99
 
 - name: Create a Tomcat Directory
   file:
